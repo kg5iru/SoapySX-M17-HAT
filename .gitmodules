@@ -1,0 +1,20 @@
+[submodule "sxxcvr"]
+	path = sxxcvr
+	url = https://github.com/kg5iru/sxxcvr.git
+	branch = m17-sx1255-hat
+[submodule "MMDVM-Multi"]
+	path = MMDVM-Multi
+	url = https://github.com/kg5iru/MMDVM-Multi.git
+	branch = m17-integration
+[submodule "MMDVM-IQ"]
+	path = MMDVM-IQ
+	url = https://github.com/kg5iru/MMDVM-IQ.git
+	branch = m17-integration
+[submodule "MMDVM-Host"]
+	path = MMDVM-Host
+	url = https://github.com/kg5iru/MMDVM-Host.git
+	branch = m17-integration
+[submodule "SX1255_HAT-hw"]
+	path = SX1255_HAT-hw
+	url = https://github.com/M17-Project/SX1255_HAT-hw.git
+	branch = main

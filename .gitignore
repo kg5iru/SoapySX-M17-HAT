@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+results/
+config/site.ini
+
+# Local checkouts used during development but not required by this project.
+LinHT-utils/
+MMDVMCal/
+SoapyRemote/

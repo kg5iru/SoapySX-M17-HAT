@@ -1,0 +1,4 @@
+# Raw MMDVM-Multi received-power magnitude to relative dBFS display.
+# This is intentionally an identity map, not an absolute dBm calibration.
+0       0
+255     -255

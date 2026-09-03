@@ -1,0 +1,31 @@
+name: checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends \
+            cmake device-tree-compiler libasound2-dev libsoapysdr-dev python3-numpy
+
+      - name: Check Python tools
+        run: |
+          python3 -m py_compile tools/*.py
+          python3 -m unittest discover -s tests -v
+
+      - name: Build SoapySX and M17 overlay
+        run: |
+          cmake -S sxxcvr/SoapySX -B sxxcvr/SoapySX/build \
+            -DINSTALL_PIPEWIRE_CONF=OFF
+          cmake --build sxxcvr/SoapySX/build --parallel 2
+          make -C sxxcvr/dts overlays
