@@ -1,4 +1,8 @@
-# SoapySX M17 HAT support
+# SoapySX board profiles
+
+The original SXceiver and the Z32IT LittlePA and BigPA boards use the
+`board=sxceiver` profile. They must use their own HAT EEPROM/device-tree boot
+configuration, not the M17 Project overlay.
 
 The `sxxcvr` submodule adds a `board=m17` profile without changing the legacy
 SXceiver defaults. The profile uses:
