@@ -28,9 +28,10 @@ running the configuration check.
 Create the local site file, then dry-run the configuration generator:
 
 ```sh
-cp config/site.example.ini config/site.ini
-$EDITOR config/site.ini
+sudo cp config/site.example.ini config/site.ini
+sudoedit config/site.ini
 ./tools/run-seven-channel.py --check
+less /tmp/mmdvm-seven-channel/MMDVM-Multi.ini
 ```
 
 Inspect `/tmp/mmdvm-seven-channel/*.ini` before the first RF run. The
