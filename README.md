@@ -35,7 +35,8 @@ sudo SoapySDRUtil --probe="driver=sx,board=sxceiver"
 ```
 
 Do not install or load the M17 Project overlay for an SXceiver or a Z32IT
-LittlePA/BigPA.
+LittlePA/BigPA. The probe reports whether the SXceiver profile detected a
+32 MHz or 38.4 MHz reference; use that result when selecting the sample rate.
 
 The current tested full-duplex alignment for the M17 Project HAT is RX gain
 30 dB and TX gain 0 dB. On the test installation, simultaneous DMR and M17
@@ -108,6 +109,10 @@ override arguments.
 
 Copy the example and enter your licensed station values and locally authorized
 frequencies:
+
+Set `sample_rate=250000` for a 32 MHz reference, including the M17 Project
+HAT. Set `sample_rate=300000` when the SXceiver profile detects a 38.4 MHz
+reference.
 
 Ensure you have an editor set in `$EDITOR`, normally in `~/.bashrc`.
 

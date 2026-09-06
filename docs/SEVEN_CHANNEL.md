@@ -14,8 +14,16 @@ disabled in the supplied templates.
 | 6 | M17 | -50 kHz | 431.450 MHz | 446.450 MHz |
 | 7 | FM | -75 kHz | 431.425 MHz | 446.425 MHz |
 
-The HAT runs at 250 kS/s. MMDVM-Multi maps the remaining channels to
-`+25`, `+50`, `+75`, `-25`, `-50`, and `-75` kHz around channel 1.
+MMDVM-Multi maps the remaining channels to `+25`, `+50`, `+75`, `-25`,
+`-50`, and `-75` kHz around channel 1. Use a sample rate that is native to
+the HAT's reference clock:
+
+- `250000` for a 32 MHz reference, including the M17 Project HAT; or
+- `300000` for a 38.4 MHz reference used by many SXceiver HATs.
+
+The SXceiver profile detects its reference clock during the SoapySDR probe.
+Set `sample_rate` in `config/site.ini` to the corresponding value before
+running the configuration check.
 
 Create the local site file, then dry-run the configuration generator:
 

@@ -26,6 +26,7 @@ HOST_TEMPLATES = {
     "FM": TEMPLATE_DIR / "MMDVM-Host-FM.ini",
 }
 RSSI_TEMPLATE = TEMPLATE_DIR / "RSSI-relative.dat"
+SUPPORTED_SAMPLE_RATES = (250_000, 300_000)
 
 
 @dataclass(frozen=True)
@@ -96,8 +97,11 @@ def load_site(path: Path) -> Site:
         raise RuntimeError(f"set a licensed callsign in {path}")
     if site.dmr_id <= 0:
         raise RuntimeError(f"set a positive DMR ID in {path}")
-    if site.sample_rate != 250_000:
-        raise RuntimeError("this seven-channel layout requires sample_rate=250000")
+    if site.sample_rate not in SUPPORTED_SAMPLE_RATES:
+        raise RuntimeError(
+            "this seven-channel layout requires sample_rate=250000 for a "
+            "32 MHz reference or sample_rate=300000 for a 38.4 MHz reference"
+        )
     if not 0 <= site.rx_gain_db <= 60 or not 0 <= site.tx_gain_db <= 15:
         raise RuntimeError("SX1255 gains must be RX 0..60 dB and TX 0..15 dB")
     return site

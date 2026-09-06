@@ -60,6 +60,36 @@ class RunnerTests(unittest.TestCase):
             self.assertIn("TxGain=0", multi)
             self.assertIn(str(work / "run" / "RSSI-relative.dat"), dmr)
 
+    def test_accepts_38_4_mhz_sxceiver_sample_rate(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            work = Path(temporary)
+            site_path = work / "site.ini"
+            site_path.write_text(
+                SITE_TEXT.replace("sample_rate=250000", "sample_rate=300000"),
+                encoding="utf-8",
+            )
+            site = RUNNER.load_site(site_path)
+            channels = RUNNER.build_channels(site)
+            RUNNER.prepare_configs(site, channels, work / "run")
+
+            multi = (work / "run" / "MMDVM-Multi.ini").read_text(encoding="utf-8")
+            self.assertEqual(site.sample_rate, 300_000)
+            self.assertIn("SampleRate=300000", multi)
+            self.assertEqual(
+                [channel.offset_hz for channel in channels],
+                [0, 25_000, 50_000, 75_000, -25_000, -50_000, -75_000],
+            )
+
+    def test_rejects_non_native_seven_channel_sample_rate(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            site_path = Path(temporary) / "site.ini"
+            site_path.write_text(
+                SITE_TEXT.replace("sample_rate=250000", "sample_rate=200000"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(RuntimeError, "sample_rate=250000"):
+                RUNNER.load_site(site_path)
+
     def test_rejects_unconfigured_example_identity(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             site_path = Path(temporary) / "site.ini"
