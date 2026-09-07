@@ -38,6 +38,10 @@ class Site:
     sample_rate: int
     rx_gain_db: int
     tx_gain_db: int
+    rx_lna_gain_db: int
+    rx_pga_gain_db: int
+    tx_dac_gain_db: int
+    tx_mixer_gain_db: int
     digital_gain: int
     rssi_calibration: int
 
@@ -87,6 +91,10 @@ def load_site(path: Path) -> Site:
             sample_rate=parser.getint("radio", "sample_rate"),
             rx_gain_db=parser.getint("radio", "rx_gain_db"),
             tx_gain_db=parser.getint("radio", "tx_gain_db"),
+            rx_lna_gain_db=parser.getint("radio", "rx_lna_gain_db"),
+            rx_pga_gain_db=parser.getint("radio", "rx_pga_gain_db"),
+            tx_dac_gain_db=parser.getint("radio", "tx_dac_gain_db"),
+            tx_mixer_gain_db=parser.getint("radio", "tx_mixer_gain_db"),
             digital_gain=parser.getint("radio", "digital_gain"),
             rssi_calibration=parser.getint("radio", "rssi_calibration"),
         )
@@ -102,8 +110,12 @@ def load_site(path: Path) -> Site:
             "this seven-channel layout requires sample_rate=250000 for a "
             "32 MHz reference or sample_rate=300000 for a 38.4 MHz reference"
         )
-    if not 0 <= site.rx_gain_db <= 60 or not 0 <= site.tx_gain_db <= 15:
-        raise RuntimeError("SX1255 gains must be RX 0..60 dB and TX 0..15 dB")
+    if not 0 <= site.rx_gain_db <= 78 or not 0 <= site.tx_gain_db <= 39:
+        raise RuntimeError("SX1255 aggregate gains must be RX 0..78 dB and TX 0..39 dB")
+    if not 0 <= site.rx_lna_gain_db <= 48 or not 0 <= site.rx_pga_gain_db <= 30:
+        raise RuntimeError("SX1255 RX stages must be LNA 0..48 dB and PGA 0..30 dB")
+    if not 0 <= site.tx_dac_gain_db <= 9 or not 0 <= site.tx_mixer_gain_db <= 30:
+        raise RuntimeError("SX1255 TX stages must be DAC 0..9 dB and MIXER 0..30 dB")
     return site
 
 
@@ -157,6 +169,10 @@ def prepare_configs(site: Site, channels: tuple[Channel, ...], run_dir: Path) ->
             ("Modem", "SampleRate"): str(site.sample_rate),
             ("Modem", "RxGain"): str(site.rx_gain_db),
             ("Modem", "TxGain"): str(site.tx_gain_db),
+            ("Modem", "RxLNAGain"): str(site.rx_lna_gain_db),
+            ("Modem", "RxPGAGain"): str(site.rx_pga_gain_db),
+            ("Modem", "TxDACGain"): str(site.tx_dac_gain_db),
+            ("Modem", "TxMixerGain"): str(site.tx_mixer_gain_db),
             ("Modem", "DigitalGain"): str(site.digital_gain),
             ("General", "RSSICalibration"): str(site.rssi_calibration),
         },
@@ -202,7 +218,8 @@ def prepare_configs(site: Site, channels: tuple[Channel, ...], run_dir: Path) ->
 def print_plan(site: Site, channels: tuple[Channel, ...]) -> None:
     print(
         f"Station {site.callsign} / DMR ID {site.dmr_id}; "
-        f"RX gain {site.rx_gain_db} dB; TX gain {site.tx_gain_db} dB"
+        f"RX LNA/PGA {site.rx_lna_gain_db}/{site.rx_pga_gain_db} dB; "
+        f"TX DAC/MIXER {site.tx_dac_gain_db}/{site.tx_mixer_gain_db} dB"
     )
     print("Ch  Mode  Offset   RX MHz      TX MHz      Host<->IQ    IQ<->Multi")
     for channel in channels:

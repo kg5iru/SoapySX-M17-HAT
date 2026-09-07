@@ -34,6 +34,18 @@ The implementation preserves the original SXceiver profile, including HAT
 EEPROM revision detection, its external RF switch GPIOs, automatic clock
 detection and I2S sample-bit PA control.
 
+## Named analog gains
+
+SoapySX exposes RX `LNA` (0–48 dB) and `PGA` (0–30 dB), plus TX `DAC`
+(0–9 dB) and `MIXER` (0–30 dB). Applications should use named SoapySDR gain
+calls when analog gain placement matters. Aggregate gain calls remain
+available and are divided between stages by the driver.
+
+MMDVM-Multi's `RxLNAGain`, `RxPGAGain`, `TxDACGain`, and `TxMixerGain`
+settings select these stages explicitly for `Type=sx`. `DigitalGain` remains
+independent because it changes digital baseband amplitude rather than an
+SX1255 analog stage.
+
 ## Validation performed
 
 - clean CMake build of `libSXSupport.so` on 64-bit Raspberry Pi OS;

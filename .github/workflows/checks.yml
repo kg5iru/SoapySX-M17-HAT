@@ -16,7 +16,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --no-install-recommends \
-            cmake device-tree-compiler libasound2-dev libsoapysdr-dev python3-numpy
+            cmake device-tree-compiler libasound2-dev libliquid-dev \
+            libmosquitto-dev libsoapysdr-dev python3-numpy
 
       - name: Check Python tools
         run: |
@@ -29,3 +30,6 @@ jobs:
             -DINSTALL_PIPEWIRE_CONF=OFF
           cmake --build sxxcvr/SoapySX/build --parallel 2
           make -C sxxcvr/dts overlays
+
+      - name: Build MMDVM-Multi
+        run: make -C MMDVM-Multi -j2

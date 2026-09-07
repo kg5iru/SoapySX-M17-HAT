@@ -30,6 +30,10 @@ tx_base_hz=446500000
 sample_rate=250000
 rx_gain_db=30
 tx_gain_db=0
+rx_lna_gain_db=12
+rx_pga_gain_db=18
+tx_dac_gain_db=0
+tx_mixer_gain_db=0
 digital_gain=35
 rssi_calibration=70
 """
@@ -58,6 +62,10 @@ class RunnerTests(unittest.TestCase):
             self.assertIn("TXFrequency=446450000", m17)
             self.assertIn("RxGain=30", multi)
             self.assertIn("TxGain=0", multi)
+            self.assertIn("RxLNAGain=12", multi)
+            self.assertIn("RxPGAGain=18", multi)
+            self.assertIn("TxDACGain=0", multi)
+            self.assertIn("TxMixerGain=0", multi)
             self.assertIn(str(work / "run" / "RSSI-relative.dat"), dmr)
 
     def test_accepts_38_4_mhz_sxceiver_sample_rate(self) -> None:
@@ -88,6 +96,16 @@ class RunnerTests(unittest.TestCase):
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(RuntimeError, "sample_rate=250000"):
+                RUNNER.load_site(site_path)
+
+    def test_rejects_out_of_range_named_gain(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            site_path = Path(temporary) / "site.ini"
+            site_path.write_text(
+                SITE_TEXT.replace("tx_mixer_gain_db=0", "tx_mixer_gain_db=31"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(RuntimeError, "MIXER 0..30"):
                 RUNNER.load_site(site_path)
 
     def test_rejects_unconfigured_example_identity(self) -> None:

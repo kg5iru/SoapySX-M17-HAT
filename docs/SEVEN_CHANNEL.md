@@ -46,3 +46,8 @@ sudo ./tools/run-seven-channel.py --stop
 DMR defaults to color code 1 with both slots enabled. M17 defaults to CAN 0.
 FM initially uses carrier/noise squelch for alignment. Network sections and
 automatic beacons are disabled.
+
+The site file separates SX1255 analog gain into RX LNA/PGA and TX DAC/mixer
+stages. The aggregate RX/TX values remain in generated configurations as
+fallbacks for older MMDVM-Multi builds. `DigitalGain` separately controls
+digital baseband amplitude.

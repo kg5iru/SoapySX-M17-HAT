@@ -30,10 +30,12 @@ physical HAT:
 Do not install or load the M17 Project overlay for an SXceiver or a Z32IT
 LittlePA/BigPA.
 
-The current tested full-duplex alignment for the M17 Project HAT is RX gain
-30 dB and TX gain 0 dB. On the test installation, simultaneous DMR and M17
-transmissions decoded at 0.0% and 0.2% BER respectively. These are starting
-points, not universal calibration values.
+The current tested full-duplex alignment for the M17 Project HAT uses explicit
+RX `LNA=12` dB and `PGA=18` dB stages, with TX `DAC=0` dB and `MIXER=0` dB.
+This is equivalent to the previously tested aggregate RX gain 30 dB and TX
+gain 0 dB. On the test installation, simultaneous DMR and M17 transmissions
+decoded at 0.0% and 0.2% BER respectively. These are starting points, not
+universal calibration values.
 
 ## Clone and build
 
